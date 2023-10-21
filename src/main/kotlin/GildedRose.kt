@@ -2,7 +2,7 @@ package dev.wolfremium.www
 
 class GildedRose(var items: List<Item>) {
     fun updateQuality() {
-        for (i in items.indices) {
+        items.forEach { item ->
             val maxQuality = 50
             val minQuality = 0
             val agedBrie = "Aged Brie"
@@ -10,52 +10,52 @@ class GildedRose(var items: List<Item>) {
             val sulfuras = "Sulfuras, Hand of Ragnaros"
             val qualityIncrease = 1
             val qualityDecrease = 1
-            if (items[i].name != agedBrie && items[i].name != backstagePasses) {
-                if (items[i].quality > minQuality) {
-                    if (items[i].name != sulfuras) {
-                        items[i].quality = items[i].quality - qualityDecrease
+            if (item.name != agedBrie && item.name != backstagePasses) {
+                if (item.quality > minQuality) {
+                    if (item.name != sulfuras) {
+                        item.quality = item.quality - qualityDecrease
                     }
                 }
             } else {
-                if (items[i].quality < maxQuality) {
-                    items[i].quality = items[i].quality + qualityIncrease
+                if (item.quality < maxQuality) {
+                    item.quality = item.quality + qualityIncrease
 
-                    if (items[i].name == backstagePasses) {
+                    if (item.name == backstagePasses) {
                         val backstagePassesBigThreshold = 11
-                        if (items[i].sellIn < backstagePassesBigThreshold) {
-                            if (items[i].quality < maxQuality) {
-                                items[i].quality = items[i].quality + qualityIncrease
+                        if (item.sellIn < backstagePassesBigThreshold) {
+                            if (item.quality < maxQuality) {
+                                item.quality = item.quality + qualityIncrease
                             }
                         }
 
                         val backstagePassesSmallThreshold = 6
-                        if (items[i].sellIn < backstagePassesSmallThreshold) {
-                            if (items[i].quality < maxQuality) {
-                                items[i].quality = items[i].quality + qualityIncrease
+                        if (item.sellIn < backstagePassesSmallThreshold) {
+                            if (item.quality < maxQuality) {
+                                item.quality = item.quality + qualityIncrease
                             }
                         }
                     }
                 }
             }
 
-            if (items[i].name != sulfuras) {
-                items[i].sellIn = items[i].sellIn - 1
+            if (item.name != sulfuras) {
+                item.sellIn = item.sellIn - 1
             }
 
-            if (items[i].sellIn < minQuality) {
-                if (items[i].name != agedBrie) {
-                    if (items[i].name != backstagePasses) {
-                        if (items[i].quality > minQuality) {
-                            if (items[i].name != sulfuras) {
-                                items[i].quality = items[i].quality - qualityDecrease
+            if (item.sellIn < minQuality) {
+                if (item.name != agedBrie) {
+                    if (item.name != backstagePasses) {
+                        if (item.quality > minQuality) {
+                            if (item.name != sulfuras) {
+                                item.quality = item.quality - qualityDecrease
                             }
                         }
                     } else {
-                        items[i].quality = items[i].quality - items[i].quality
+                        item.quality = item.quality - item.quality
                     }
                 } else {
-                    if (items[i].quality < maxQuality) {
-                        items[i].quality = items[i].quality + qualityIncrease
+                    if (item.quality < maxQuality) {
+                        item.quality = item.quality + qualityIncrease
                     }
                 }
             }
