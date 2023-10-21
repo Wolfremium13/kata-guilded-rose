@@ -1,20 +1,5 @@
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### IntelliJ IDEA ###
-
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-
-### Local ###
 .vscode
 .DS_Store
 .idea
+gradle
+build
