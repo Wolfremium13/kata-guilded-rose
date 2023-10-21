@@ -3,50 +3,59 @@ package dev.wolfremium.www
 class GildedRose(var items: List<Item>) {
     fun updateQuality() {
         for (i in items.indices) {
-            if (items[i].name != "Aged Brie" && items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
-                if (items[i].quality > 0) {
-                    if (items[i].name != "Sulfuras, Hand of Ragnaros") {
-                        items[i].quality = items[i].quality - 1
+            val maxQuality = 50
+            val minQuality = 0
+            val agedBrie = "Aged Brie"
+            val backstagePasses = "Backstage passes to a TAFKAL80ETC concert"
+            val sulfuras = "Sulfuras, Hand of Ragnaros"
+            val qualityIncrease = 1
+            val qualityDecrease = 1
+            if (items[i].name != agedBrie && items[i].name != backstagePasses) {
+                if (items[i].quality > minQuality) {
+                    if (items[i].name != sulfuras) {
+                        items[i].quality = items[i].quality - qualityDecrease
                     }
                 }
             } else {
-                if (items[i].quality < 50) {
-                    items[i].quality = items[i].quality + 1
+                if (items[i].quality < maxQuality) {
+                    items[i].quality = items[i].quality + qualityIncrease
 
-                    if (items[i].name == "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].sellIn < 11) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1
+                    if (items[i].name == backstagePasses) {
+                        val backstagePassesBigThreshold = 11
+                        if (items[i].sellIn < backstagePassesBigThreshold) {
+                            if (items[i].quality < maxQuality) {
+                                items[i].quality = items[i].quality + qualityIncrease
                             }
                         }
 
-                        if (items[i].sellIn < 6) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1
+                        val backstagePassesSmallThreshold = 6
+                        if (items[i].sellIn < backstagePassesSmallThreshold) {
+                            if (items[i].quality < maxQuality) {
+                                items[i].quality = items[i].quality + qualityIncrease
                             }
                         }
                     }
                 }
             }
 
-            if (items[i].name != "Sulfuras, Hand of Ragnaros") {
+            if (items[i].name != sulfuras) {
                 items[i].sellIn = items[i].sellIn - 1
             }
 
-            if (items[i].sellIn < 0) {
-                if (items[i].name != "Aged Brie") {
-                    if (items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].quality > 0) {
-                            if (items[i].name != "Sulfuras, Hand of Ragnaros") {
-                                items[i].quality = items[i].quality - 1
+            if (items[i].sellIn < minQuality) {
+                if (items[i].name != agedBrie) {
+                    if (items[i].name != backstagePasses) {
+                        if (items[i].quality > minQuality) {
+                            if (items[i].name != sulfuras) {
+                                items[i].quality = items[i].quality - qualityDecrease
                             }
                         }
                     } else {
                         items[i].quality = items[i].quality - items[i].quality
                     }
                 } else {
-                    if (items[i].quality < 50) {
-                        items[i].quality = items[i].quality + 1
+                    if (items[i].quality < maxQuality) {
+                        items[i].quality = items[i].quality + qualityIncrease
                     }
                 }
             }
