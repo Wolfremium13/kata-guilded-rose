@@ -13,28 +13,21 @@ class GildedRose(var items: List<Item>) {
             if (item.name == agedBrie || item.name == backstagePasses) {
                 if (item.quality < maxQuality) {
                     item.quality = item.quality + qualityIncrease
-
                     if (item.name == backstagePasses) {
                         val backstagePassesBigThreshold = 11
-                        if (item.sellIn < backstagePassesBigThreshold) {
-                            if (item.quality < maxQuality) {
-                                item.quality = item.quality + qualityIncrease
-                            }
+                        if (item.sellIn < backstagePassesBigThreshold && item.quality < maxQuality) {
+                            item.quality = item.quality + qualityIncrease
                         }
 
                         val backstagePassesSmallThreshold = 6
-                        if (item.sellIn < backstagePassesSmallThreshold) {
-                            if (item.quality < maxQuality) {
-                                item.quality = item.quality + qualityIncrease
-                            }
+                        if (item.sellIn < backstagePassesSmallThreshold && item.quality < maxQuality) {
+                            item.quality = item.quality + qualityIncrease
                         }
                     }
                 }
             } else {
-                if (item.quality > minQuality) {
-                    if (item.name != sulfuras) {
-                        item.quality = item.quality - qualityDecrease
-                    }
+                if (item.quality > minQuality && item.name != sulfuras) {
+                    item.quality = item.quality - qualityDecrease
                 }
             }
 
@@ -51,10 +44,8 @@ class GildedRose(var items: List<Item>) {
                     if (item.name == backstagePasses) {
                         item.quality = item.quality - item.quality
                     } else {
-                        if (item.quality > minQuality) {
-                            if (item.name != sulfuras) {
-                                item.quality = item.quality - qualityDecrease
-                            }
+                        if (item.quality > minQuality && item.name != sulfuras) {
+                            item.quality = item.quality - qualityDecrease
                         }
                     }
                 }
