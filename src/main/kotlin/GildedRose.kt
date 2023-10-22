@@ -9,22 +9,23 @@ class GildedRose(var items: List<Item>) {
     }
 
     private fun decreaseQuality(item: Item) {
+        val minQuality = 0
+        val hasQuality = item.quality > minQuality
+        if(!hasQuality) return
         val isAgedBrie = isAgedBrie(item)
         val isABackStagePass = isABackstagePass(item)
         val isExpired = isExpired(item)
         val qualityDecrease = 1
-        val minQuality = 0
-        val hasQuality = item.quality > minQuality
         val areAgeBrieOrPasses = isAgedBrie || isABackStagePass
-        if (!areAgeBrieOrPasses && hasQuality && isNotSulfuras(item)) {
+        if (!areAgeBrieOrPasses && isNotSulfuras(item)) {
             item.quality -= qualityDecrease
         }
         if (isExpired) {
             if (!isAgedBrie) {
                 if (isABackStagePass) {
-                    item.quality -= item.quality
+                    item.quality = minQuality
                 } else {
-                    if (hasQuality && isNotSulfuras(item)) {
+                    if (isNotSulfuras(item)) {
                         item.quality -= qualityDecrease
                     }
                 }
