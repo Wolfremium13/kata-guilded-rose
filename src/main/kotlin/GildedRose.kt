@@ -32,33 +32,36 @@ class GildedRose(var items: List<Item>) {
     private fun increaseQuality(item: Item) {
         val maxQuality = 50
         val isNotTheMaximumQuality = item.quality < maxQuality
-        val isAgedBrie = isAgedBrie(item)
-        val isABackStagePass = isABackstagePass(item)
+        val itHasTheMaximumQuality = item.quality == maxQuality
+        if (itHasTheMaximumQuality) return
         val qualityIncrease = 1
-        val areAgeBrieOrPasses = isAgedBrie || isABackStagePass
-        if (areAgeBrieOrPasses) {
-            if (isNotTheMaximumQuality) {
-                item.quality += qualityIncrease
-                if (isABackStagePass) {
-                    val backstagePassesBigThreshold = 11
-                    val areInDateToBeSold = item.sellIn < backstagePassesBigThreshold
-                    if (areInDateToBeSold && isNotTheMaximumQuality) {
-                        item.quality += qualityIncrease
-                    }
 
-                    val backstagePassesSmallThreshold = 6
-                    val areOnTheLastDays = item.sellIn < backstagePassesSmallThreshold
-                    if (areOnTheLastDays && isNotTheMaximumQuality) {
-                        item.quality += qualityIncrease
-                    }
-                }
+        if (isABackstagePass(item)) {
+            item.quality += qualityIncrease
+            val backstagePassesBigThreshold = 11
+            val areInDateToBeSold = item.sellIn < backstagePassesBigThreshold
+            if (areInDateToBeSold && isNotTheMaximumQuality) {
+                item.quality += qualityIncrease
             }
+            val backstagePassesSmallThreshold = 6
+            val areOnTheLastDays = item.sellIn < backstagePassesSmallThreshold
+            if (areOnTheLastDays && isNotTheMaximumQuality) {
+                item.quality += qualityIncrease
+            }
+            decreaseSellIn(item)
+            return
+        }
+
+        if (isAgedBrie(item)) {
+            item.quality += qualityIncrease
+            decreaseSellIn(item)
+            val isExpired = isExpired(item)
+            if (isExpired && isNotTheMaximumQuality) {
+                item.quality += qualityIncrease
+            }
+            return
         }
         decreaseSellIn(item)
-        val isExpired = isExpired(item)
-        if (isExpired && isAgedBrie && isNotTheMaximumQuality) {
-            item.quality += qualityIncrease
-        }
     }
 
     private fun decreaseSellIn(item: Item) {
