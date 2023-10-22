@@ -18,7 +18,7 @@ class GildedRose(var items: List<Item>) {
             val isNotSulfuras = item.name != sulfuras
             if (areAgeBrieOrPasses) {
                 if (isNotTheMaximumQuality) {
-                    item.quality = item.quality + qualityIncrease
+                    item.quality += qualityIncrease
                     if (isABackStagePass) {
                         val backstagePassesBigThreshold = 11
                         val areInDateToBeSold = item.sellIn < backstagePassesBigThreshold
@@ -39,9 +39,7 @@ class GildedRose(var items: List<Item>) {
                 }
             }
 
-            if (isNotSulfuras) {
-                item.sellIn = item.sellIn - 1
-            }
+            decreaseSellIn(isNotSulfuras, item)
 
             val notExpiredNumber = 0
             val isExpired = item.sellIn < notExpiredNumber
@@ -60,6 +58,13 @@ class GildedRose(var items: List<Item>) {
                     }
                 }
             }
+        }
+    }
+
+    private fun decreaseSellIn(isNotSulfuras: Boolean, item: Item) {
+        if (isNotSulfuras) {
+            val dayDecrease = 1
+            item.sellIn -= dayDecrease
         }
     }
 }
