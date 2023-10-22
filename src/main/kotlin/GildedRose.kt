@@ -1,14 +1,11 @@
 package dev.wolfremium.www
 
 class GildedRose(var items: List<Item>) {
+    private val itemUpdaterFactory = ItemUpdaterFactory()
+
     fun updateQuality() {
         items.forEach { item ->
-            val updater = when (item.name) {
-                "Aged Brie" -> AgedBrieUpdater()
-                "Backstage passes to a TAFKAL80ETC concert" -> BackstagePassUpdater()
-                "Sulfuras, Hand of Ragnaros" -> SulfurasUpdater()
-                else -> DefaultItemUpdater()
-            }
+            val updater = itemUpdaterFactory.getUpdater(item)
             updater.updateQuality(item)
             updater.decreaseSellIn(item)
         }
