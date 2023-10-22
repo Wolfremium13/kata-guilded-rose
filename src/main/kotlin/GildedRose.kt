@@ -31,11 +31,11 @@ class GildedRose(var items: List<Item>) {
                         }
                     }
                 }
-            } else {
-                if (hasQuality && isNotSulfuras(item)) {
-                    item.quality = item.quality - qualityDecrease
-                }
             }
+            if (!areAgeBrieOrPasses && hasQuality && isNotSulfuras(item)) {
+                item.quality -= qualityDecrease
+            }
+
 
             decreaseSellIn(item)
 
