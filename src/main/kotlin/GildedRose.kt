@@ -7,7 +7,6 @@ class GildedRose(var items: List<Item>) {
             val minQuality = 0
             val agedBrie = "Aged Brie"
             val backstagePasses = "Backstage passes to a TAFKAL80ETC concert"
-            val sulfuras = "Sulfuras, Hand of Ragnaros"
             val qualityIncrease = 1
             val qualityDecrease = 1
             val isNotTheMaximumQuality = item.quality < maxQuality
@@ -15,7 +14,6 @@ class GildedRose(var items: List<Item>) {
             val isABackStagePass = item.name == backstagePasses
             val areAgeBrieOrPasses = isAgedBrie || isABackStagePass
             val hasQuality = item.quality > minQuality
-            val isNotSulfuras = item.name != sulfuras
             if (areAgeBrieOrPasses) {
                 if (isNotTheMaximumQuality) {
                     item.quality += qualityIncrease
@@ -34,12 +32,12 @@ class GildedRose(var items: List<Item>) {
                     }
                 }
             } else {
-                if (hasQuality && isNotSulfuras) {
+                if (hasQuality && isNotSulfuras(item)) {
                     item.quality = item.quality - qualityDecrease
                 }
             }
 
-            decreaseSellIn(isNotSulfuras, item)
+            decreaseSellIn(item)
 
             val notExpiredNumber = 0
             val isExpired = item.sellIn < notExpiredNumber
@@ -52,7 +50,7 @@ class GildedRose(var items: List<Item>) {
                     if (isABackStagePass) {
                         item.quality = item.quality - item.quality
                     } else {
-                        if (hasQuality && isNotSulfuras) {
+                        if (hasQuality && isNotSulfuras(item)) {
                             item.quality = item.quality - qualityDecrease
                         }
                     }
@@ -61,10 +59,17 @@ class GildedRose(var items: List<Item>) {
         }
     }
 
-    private fun decreaseSellIn(isNotSulfuras: Boolean, item: Item) {
-        if (isNotSulfuras) {
+    private fun isNotSulfuras(item: Item): Boolean {
+        val sulfuras = "Sulfuras, Hand of Ragnaros"
+        return item.name != sulfuras
+    }
+
+    private fun decreaseSellIn(item: Item) {
+        if (isNotSulfuras(item)) {
             val dayDecrease = 1
             item.sellIn -= dayDecrease
         }
     }
+
+
 }
