@@ -12,14 +12,13 @@ class GildedRose(var items: List<Item>) {
         val minQuality = 0
         val hasQuality = item.quality > minQuality
         if (!hasQuality) return
-        val isAgedBrie = isAgedBrie(item)
         val isExpired = isExpired(item)
         val qualityDecrease = 1
         if (isExpired && isABackstagePass(item)) {
             item.quality = minQuality
             return
         }
-        val hasAnExpirationDate = !(isAgedBrie || isABackstagePass(item)) && isNotSulfuras(item)
+        val hasAnExpirationDate = !(isAgedBrie(item) || isABackstagePass(item)) && isNotSulfuras(item)
         if (isExpired && hasAnExpirationDate) {
             val expirationMultiplier = 2
             item.quality -= qualityDecrease * expirationMultiplier
