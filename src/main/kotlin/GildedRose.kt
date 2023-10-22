@@ -10,13 +10,7 @@ class GildedRose(var items: List<Item>) {
             val sulfuras = "Sulfuras, Hand of Ragnaros"
             val qualityIncrease = 1
             val qualityDecrease = 1
-            if (item.name != agedBrie && item.name != backstagePasses) {
-                if (item.quality > minQuality) {
-                    if (item.name != sulfuras) {
-                        item.quality = item.quality - qualityDecrease
-                    }
-                }
-            } else {
+            if (item.name == agedBrie || item.name == backstagePasses) {
                 if (item.quality < maxQuality) {
                     item.quality = item.quality + qualityIncrease
 
@@ -34,6 +28,12 @@ class GildedRose(var items: List<Item>) {
                                 item.quality = item.quality + qualityIncrease
                             }
                         }
+                    }
+                }
+            } else {
+                if (item.quality > minQuality) {
+                    if (item.name != sulfuras) {
+                        item.quality = item.quality - qualityDecrease
                     }
                 }
             }
