@@ -1,13 +1,12 @@
 package dev.wolfremium.www
 
-class GildedRose(var items: List<Item>) {
-    private val itemUpdaterFactory = ItemUpdaterFactory()
+import dev.wolfremium.www.items.Item
 
+class GildedRose(var items: List<Item>) {
     fun updateQuality() {
         items.forEach { item ->
-            val updater = itemUpdaterFactory.getUpdater(item)
-            updater.updateQuality(item)
-            updater.decreaseSellIn(item)
+            item.updateQuality()
+            item.decreaseSellIn()
         }
     }
 }
