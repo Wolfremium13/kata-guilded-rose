@@ -43,19 +43,19 @@ class GildedRose(var items: List<Item>) {
             }
 
             if (item.sellIn < minQuality) {
-                if (item.name != agedBrie) {
-                    if (item.name != backstagePasses) {
+                if (item.name == agedBrie) {
+                    if (item.quality < maxQuality) {
+                        item.quality = item.quality + qualityIncrease
+                    }
+                } else {
+                    if (item.name == backstagePasses) {
+                        item.quality = item.quality - item.quality
+                    } else {
                         if (item.quality > minQuality) {
                             if (item.name != sulfuras) {
                                 item.quality = item.quality - qualityDecrease
                             }
                         }
-                    } else {
-                        item.quality = item.quality - item.quality
-                    }
-                } else {
-                    if (item.quality < maxQuality) {
-                        item.quality = item.quality + qualityIncrease
                     }
                 }
             }
