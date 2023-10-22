@@ -11,25 +11,22 @@ class GildedRose(var items: List<Item>) {
     private fun decreaseQuality(item: Item) {
         val minQuality = 0
         val hasQuality = item.quality > minQuality
-        if(!hasQuality) return
+        if (!hasQuality) return
         val isAgedBrie = isAgedBrie(item)
-        val isABackStagePass = isABackstagePass(item)
         val isExpired = isExpired(item)
         val qualityDecrease = 1
-        val areAgeBrieOrPasses = isAgedBrie || isABackStagePass
-        if (!areAgeBrieOrPasses && isNotSulfuras(item)) {
-            item.quality -= qualityDecrease
+        if (isExpired && isABackstagePass(item)) {
+            item.quality = minQuality
+            return
         }
-        if (isExpired) {
-            if (!isAgedBrie) {
-                if (isABackStagePass) {
-                    item.quality = minQuality
-                } else {
-                    if (isNotSulfuras(item)) {
-                        item.quality -= qualityDecrease
-                    }
-                }
-            }
+        val hasAnExpirationDate = !(isAgedBrie || isABackstagePass(item)) && isNotSulfuras(item)
+        if (isExpired && hasAnExpirationDate) {
+            val expirationMultiplier = 2
+            item.quality -= qualityDecrease * expirationMultiplier
+            return
+        }
+        if (hasAnExpirationDate) {
+            item.quality -= qualityDecrease
         }
     }
 
@@ -76,14 +73,17 @@ class GildedRose(var items: List<Item>) {
         val sulfuras = "Sulfuras, Hand of Ragnaros"
         return item.name != sulfuras
     }
+
     private fun isAgedBrie(item: Item): Boolean {
         val agedBrie = "Aged Brie"
         return item.name == agedBrie
     }
+
     private fun isABackstagePass(item: Item): Boolean {
         val backstagePass = "Backstage passes to a TAFKAL80ETC concert"
         return item.name == backstagePass
     }
+
     private fun isExpired(item: Item): Boolean {
         val expiredLimit = 0
         return item.sellIn < expiredLimit
