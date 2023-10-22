@@ -3,57 +3,70 @@ package dev.wolfremium.www
 class GildedRose(var items: List<Item>) {
     fun updateQuality() {
         items.forEach { item ->
-            val maxQuality = 50
-            val agedBrie = "Aged Brie"
-            val backstagePasses = "Backstage passes to a TAFKAL80ETC concert"
-            val qualityIncrease = 1
-            val isNotTheMaximumQuality = item.quality < maxQuality
-            val isAgedBrie = item.name == agedBrie
-            val isABackStagePass = item.name == backstagePasses
-            val areAgeBrieOrPasses = isAgedBrie || isABackStagePass
-            if (areAgeBrieOrPasses) {
-                if (isNotTheMaximumQuality) {
-                    item.quality += qualityIncrease
-                    if (isABackStagePass) {
-                        val backstagePassesBigThreshold = 11
-                        val areInDateToBeSold = item.sellIn < backstagePassesBigThreshold
-                        if (areInDateToBeSold && isNotTheMaximumQuality) {
-                            item.quality += qualityIncrease
-                        }
+            increaseQuality(item)
+            decreaseQuality(item)
+        }
+    }
 
-                        val backstagePassesSmallThreshold = 6
-                        val areOnTheLastDays = item.sellIn < backstagePassesSmallThreshold
-                        if (areOnTheLastDays && isNotTheMaximumQuality) {
-                            item.quality += qualityIncrease
-                        }
+    private fun decreaseQuality(item: Item) {
+        val agedBrie = "Aged Brie"
+        val backstagePasses = "Backstage passes to a TAFKAL80ETC concert"
+        val isAgedBrie = item.name == agedBrie
+        val isABackStagePass = item.name == backstagePasses
+        val areAgeBrieOrPasses = isAgedBrie || isABackStagePass
+        val notExpiredNumber = 0
+        val isExpired = item.sellIn < notExpiredNumber
+        val qualityDecrease = 1
+        val minQuality = 0
+        val hasQuality = item.quality > minQuality
+        if (!areAgeBrieOrPasses && hasQuality && isNotSulfuras(item)) {
+            item.quality -= qualityDecrease
+        }
+        if (isExpired) {
+            if (!isAgedBrie) {
+                if (isABackStagePass) {
+                    item.quality -= item.quality
+                } else {
+                    if (hasQuality && isNotSulfuras(item)) {
+                        item.quality -= qualityDecrease
                     }
                 }
             }
-            decreaseSellIn(item)
-            val notExpiredNumber = 0
-            val isExpired = item.sellIn < notExpiredNumber
-            if(isExpired && isAgedBrie && isNotTheMaximumQuality){
+        }
+    }
+
+    private fun increaseQuality(item: Item) {
+        val maxQuality = 50
+        val agedBrie = "Aged Brie"
+        val backstagePasses = "Backstage passes to a TAFKAL80ETC concert"
+        val qualityIncrease = 1
+        val isNotTheMaximumQuality = item.quality < maxQuality
+        val isAgedBrie = item.name == agedBrie
+        val isABackStagePass = item.name == backstagePasses
+        val areAgeBrieOrPasses = isAgedBrie || isABackStagePass
+        if (areAgeBrieOrPasses) {
+            if (isNotTheMaximumQuality) {
                 item.quality += qualityIncrease
-            }
+                if (isABackStagePass) {
+                    val backstagePassesBigThreshold = 11
+                    val areInDateToBeSold = item.sellIn < backstagePassesBigThreshold
+                    if (areInDateToBeSold && isNotTheMaximumQuality) {
+                        item.quality += qualityIncrease
+                    }
 
-
-            val qualityDecrease = 1
-            val minQuality = 0
-            val hasQuality = item.quality > minQuality
-            if (!areAgeBrieOrPasses && hasQuality && isNotSulfuras(item)) {
-                item.quality -= qualityDecrease
-            }
-            if (isExpired) {
-                if (!isAgedBrie) {
-                    if (isABackStagePass) {
-                        item.quality -= item.quality
-                    } else {
-                        if (hasQuality && isNotSulfuras(item)) {
-                            item.quality -= qualityDecrease
-                        }
+                    val backstagePassesSmallThreshold = 6
+                    val areOnTheLastDays = item.sellIn < backstagePassesSmallThreshold
+                    if (areOnTheLastDays && isNotTheMaximumQuality) {
+                        item.quality += qualityIncrease
                     }
                 }
             }
+        }
+        decreaseSellIn(item)
+        val notExpiredNumber = 0
+        val isExpired = item.sellIn < notExpiredNumber
+        if (isExpired && isAgedBrie && isNotTheMaximumQuality) {
+            item.quality += qualityIncrease
         }
     }
 
