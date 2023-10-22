@@ -10,41 +10,51 @@ class GildedRose(var items: List<Item>) {
             val sulfuras = "Sulfuras, Hand of Ragnaros"
             val qualityIncrease = 1
             val qualityDecrease = 1
-            if (item.name == agedBrie || item.name == backstagePasses) {
-                if (item.quality < maxQuality) {
+            val isNotTheMaximumQuality = item.quality < maxQuality
+            val isAgedBrie = item.name == agedBrie
+            val isABackStagePass = item.name == backstagePasses
+            val areAgeBrieOrPasses = isAgedBrie || isABackStagePass
+            val hasQuality = item.quality > minQuality
+            val isNotSulfuras = item.name != sulfuras
+            if (areAgeBrieOrPasses) {
+                if (isNotTheMaximumQuality) {
                     item.quality = item.quality + qualityIncrease
-                    if (item.name == backstagePasses) {
+                    if (isABackStagePass) {
                         val backstagePassesBigThreshold = 11
-                        if (item.sellIn < backstagePassesBigThreshold && item.quality < maxQuality) {
+                        val areInDateToBeSold = item.sellIn < backstagePassesBigThreshold
+                        if (areInDateToBeSold && isNotTheMaximumQuality) {
                             item.quality = item.quality + qualityIncrease
                         }
 
                         val backstagePassesSmallThreshold = 6
-                        if (item.sellIn < backstagePassesSmallThreshold && item.quality < maxQuality) {
+                        val areOnTheLastDays = item.sellIn < backstagePassesSmallThreshold
+                        if (areOnTheLastDays && isNotTheMaximumQuality) {
                             item.quality = item.quality + qualityIncrease
                         }
                     }
                 }
             } else {
-                if (item.quality > minQuality && item.name != sulfuras) {
+                if (hasQuality && isNotSulfuras) {
                     item.quality = item.quality - qualityDecrease
                 }
             }
 
-            if (item.name != sulfuras) {
+            if (isNotSulfuras) {
                 item.sellIn = item.sellIn - 1
             }
 
-            if (item.sellIn < minQuality) {
-                if (item.name == agedBrie) {
-                    if (item.quality < maxQuality) {
+            val notExpiredNumber = 0
+            val isExpired = item.sellIn < notExpiredNumber
+            if (isExpired) {
+                if (isAgedBrie) {
+                    if (isNotTheMaximumQuality) {
                         item.quality = item.quality + qualityIncrease
                     }
                 } else {
-                    if (item.name == backstagePasses) {
+                    if (isABackStagePass) {
                         item.quality = item.quality - item.quality
                     } else {
-                        if (item.quality > minQuality && item.name != sulfuras) {
+                        if (hasQuality && isNotSulfuras) {
                             item.quality = item.quality - qualityDecrease
                         }
                     }
