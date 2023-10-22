@@ -41,12 +41,13 @@ class GildedRose(var items: List<Item>) {
 
             val notExpiredNumber = 0
             val isExpired = item.sellIn < notExpiredNumber
+
+            if(isExpired && isAgedBrie && isNotTheMaximumQuality){
+                item.quality += qualityIncrease
+            }
+
             if (isExpired) {
-                if (isAgedBrie) {
-                    if (isNotTheMaximumQuality) {
-                        item.quality = item.quality + qualityIncrease
-                    }
-                } else {
+                if (!isAgedBrie) {
                     if (isABackStagePass) {
                         item.quality = item.quality - item.quality
                     } else {
