@@ -9,8 +9,8 @@ class DefaultItem(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, 
             decreaseQuality()
         }
     }
-    override fun decreaseSellIn() {
-        sellIn -= dayDecrease
+    override fun decreaseDaysLeft() {
+        daysLeft -= dayDecrease
     }
 
     override fun currentQuality(): Int {
@@ -18,7 +18,7 @@ class DefaultItem(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, 
     }
 
     private fun isExpired(): Boolean {
-        return sellIn <= 0
+        return daysLeft <= 0
     }
 
     private fun hadQuality(): Boolean {

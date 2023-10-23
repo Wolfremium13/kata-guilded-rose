@@ -5,7 +5,7 @@ class Sulfuras(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, qua
         // Nothing to do
     }
 
-    override fun decreaseSellIn() {
+    override fun decreaseDaysLeft() {
         // Nothing to do
     }
 

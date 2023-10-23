@@ -9,8 +9,8 @@ class AgedBrie(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, qua
         }
     }
 
-    override fun decreaseSellIn() {
-        sellIn -= dayDecrease
+    override fun decreaseDaysLeft() {
+        daysLeft -= dayDecrease
     }
 
     override fun currentQuality(): Int {
@@ -18,7 +18,7 @@ class AgedBrie(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, qua
     }
 
     private fun isExpired(): Boolean {
-        return sellIn <= 0
+        return daysLeft <= 0
     }
 
     private fun increaseQuality() {

@@ -6,7 +6,7 @@ class GildedRose(var items: List<Item>) {
     fun updateQuality() {
         items.forEach { item ->
             item.updateQuality()
-            item.decreaseSellIn()
+            item.decreaseDaysLeft()
         }
     }
 }
