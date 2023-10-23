@@ -1,122 +1,193 @@
-import dev.wolfremium.www.*
-import dev.wolfremium.www.items.AgedBrie
-import dev.wolfremium.www.items.BackstagePass
-import dev.wolfremium.www.items.DefaultItem
-import dev.wolfremium.www.items.Sulfuras
+import dev.wolfremium.www.GildedRose
+import dev.wolfremium.www.item.Item
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
+
+// It's here because of parameterized tests
+const val agedBrieItemName = "Aged Brie"
+const val backstagePassItemName = "Backstage passes to a TAFKAL80ETC concert"
+const val sulfurasItemName = "Sulfuras, Hand of Ragnaros"
+const val defaultItemName = "defauult item"
 
 class GildedRoseShould {
+    private val qualityDecrease = 1
+    private val qualityIncrease = 1
+
     @Test
-    fun `decrease quality when the item is still on the number of days to be sold`() {
-        val goods = listOf(DefaultItem("", 1, 1))
-        val app = GildedRose(goods)
+    fun `on default item decrease quality on default`() {
+        val initialQuality = 1
+        val defaultItem = ItemBuilder().withQuality(initialQuality).build()
+        val app = this.createGildedRoseApp(listOf(defaultItem))
 
         app.updateQuality()
 
-        assertThat(app.items[0].currentQuality()).isEqualTo(0)
+        val defaultQuality = app.items[0].currentQuality()
+        assertThat(defaultQuality).isEqualTo(initialQuality - qualityDecrease)
     }
 
     @Test
-    fun `decrease quality twice as fast when the item is past the number of days to be sold`() {
-        val goods = listOf(DefaultItem("", 0, 2))
-        val app = GildedRose(goods)
+    fun `on default item decrease quality twice as fast when is expired`() {
+        val initialQuality = 2
+        val noDaysLeft = 0
+        val defaultItem = ItemBuilder().withDaysLeft(noDaysLeft).withQuality(initialQuality).build()
+        val app = this.createGildedRoseApp(listOf(defaultItem))
 
         app.updateQuality()
 
-        assertThat(app.items[0].currentQuality()).isEqualTo(0)
+        val defaultQuality = app.items[0].currentQuality()
+        assertThat(defaultQuality).isEqualTo(initialQuality - (qualityDecrease * 2))
+    }
+
+    @ParameterizedTest(name = "on {0} never decrease quality below zero")
+    @ValueSource(
+        strings = [
+            backstagePassItemName,
+            sulfurasItemName,
+            defaultItemName
+        ]
+    )
+    fun `items that could decrease quality when expired`(itemName: String) {
+        val noQuality = 0
+        val noDaysLeft = 0
+        val expiredItem = ItemBuilder().withName(itemName).withDaysLeft(noDaysLeft).withQuality(noQuality).build()
+        val app = this.createGildedRoseApp(listOf(expiredItem))
+
+        app.updateQuality()
+
+        val expiredQuality = app.items[0].currentQuality()
+        assertThat(expiredQuality).isEqualTo(noQuality)
     }
 
     @Test
-    fun `never decrease quality below zero`() {
-        val goods = listOf(DefaultItem("", 0, 0))
-        val app = GildedRose(goods)
+    fun `increase quality of Aged Brie when is not expired`() {
+        val onLastDay = 1
+        val fewQuality = 1
+        val agedBrie = ItemBuilder().withName(agedBrieItemName).withDaysLeft(onLastDay).withQuality(fewQuality).build()
+        val app = this.createGildedRoseApp(listOf(agedBrie))
 
         app.updateQuality()
 
-        assertThat(app.items[0].currentQuality()).isEqualTo(0)
-    }
-
-    @Test
-    fun `increase quality of Aged Brie when the item is still on the number of days to be sold`() {
-        val goods = listOf(AgedBrie("Aged Brie", 1, 1))
-        val app = GildedRose(goods)
-
-        app.updateQuality()
-
-        assertThat(app.items[0].currentQuality()).isEqualTo(2)
+        val agedBrieQuality = app.items[0].currentQuality()
+        assertThat(agedBrieQuality).isEqualTo(fewQuality + qualityIncrease)
     }
 
 
     @Test
-    fun `increase quality of Aged Brie twice as fast when the item is past the number of days to be sold`() {
-        val goods = listOf(AgedBrie("Aged Brie", 0, 1))
-        val app = GildedRose(goods)
+    fun `increase quality twice fast of Aged Brie when is expired`() {
+        val noDaysLeft = 0
+        val mediumQuality = 2
+        val agedBrie =
+            ItemBuilder().withName(agedBrieItemName).withDaysLeft(noDaysLeft).withQuality(mediumQuality).build()
+        val app = this.createGildedRoseApp(listOf(agedBrie))
 
         app.updateQuality()
 
-        assertThat(app.items[0].currentQuality()).isEqualTo(3)
+        val agedBrieQuality = app.items[0].currentQuality()
+        assertThat(agedBrieQuality).isEqualTo(mediumQuality + (qualityIncrease * 2))
+    }
+
+    @ParameterizedTest(name = "on {0} never could be above maximum quality")
+    @ValueSource(
+        strings = [
+            agedBrieItemName,
+            backstagePassItemName,
+        ]
+    )
+    fun `items that increases quality`(itemName: String) {
+        val maximumQuality = 50
+        val fewDays = 2
+        val app = this.createGildedRoseApp(
+            listOf(
+                ItemBuilder().withName(itemName).withQuality(maximumQuality).withDaysLeft(
+                    fewDays
+                ).build()
+            )
+        )
+
+        app.updateQuality()
+
+        val itemQuality = app.items[0].currentQuality()
+        assertThat(itemQuality).isEqualTo(maximumQuality)
     }
 
     @Test
-    fun `never increase quality of Aged Brie above 50`() {
-        val goods = listOf(AgedBrie("Aged Brie", 0, 50))
-        val app = GildedRose(goods)
+    fun `never change quality of Sulfuras`() {
+        val initialQuality = 10
+        val app = this.createGildedRoseApp(
+            listOf(
+                ItemBuilder().withName(sulfurasItemName).withQuality(initialQuality).build()
+            )
+        )
 
         app.updateQuality()
 
-        assertThat(app.items[0].currentQuality()).isEqualTo(50)
+        val sulfurasQuality = app.items[0].currentQuality()
+        assertThat(sulfurasQuality).isEqualTo(initialQuality)
     }
 
     @Test
-    fun `never decrease quality of Sulfuras`() {
-        val goods = listOf(Sulfuras("Sulfuras, Hand of Ragnaros", 0, 1))
-        val app = GildedRose(goods)
+    fun `backstage passes increases quality when there a lot of time left`() {
+        val aLotOfTimeLeft = 11
+        val fewQuality = 1
+        val app = this.createGildedRoseApp(
+            listOf(
+                ItemBuilder().withName(backstagePassItemName).withDaysLeft(aLotOfTimeLeft).withQuality(fewQuality)
+                    .build()
+            )
+        )
 
         app.updateQuality()
 
-        assertThat(app.items[0].currentQuality()).isEqualTo(1)
+        val backstageQuality = app.items[0].currentQuality()
+        assertThat(backstageQuality).isEqualTo(fewQuality + qualityIncrease)
+    }
+
+    @ParameterizedTest(name = "on {0} left days")
+    @ValueSource(
+        ints = [
+            6,
+            7,
+            8,
+            9,
+            10
+        ]
+    )
+    fun `backstage passes increases quality twice when there a near by last week`(nearLastWeek: Int) {
+        val initialQuality = 1
+        val app = this.createGildedRoseApp(
+            listOf(
+                ItemBuilder().withName(backstagePassItemName).withDaysLeft(nearLastWeek).withQuality(initialQuality)
+                    .build()
+            )
+        )
+
+        app.updateQuality()
+
+        val backstageQuality = app.items[0].currentQuality()
+        assertThat(backstageQuality).isEqualTo(initialQuality + (qualityIncrease * 2))
     }
 
     @Test
-    fun `increase quality of Backstage passes by 1 when the item is still on the number of days to be sold and the number of days to be sold is greater than 10`() {
-        val goods = listOf(BackstagePass("Backstage passes to a TAFKAL80ETC concert", 11, 1))
-        val app = GildedRose(goods)
+    fun `back stage passes cannot be sold when is expired`() {
+        val highQuality = 10
+        val noDaysLeft = 0
+        val app = this.createGildedRoseApp(
+            listOf(
+                ItemBuilder().withName(backstagePassItemName).withDaysLeft(noDaysLeft).withQuality(highQuality).build()
+            )
+        )
 
         app.updateQuality()
 
-        assertThat(app.items[0].currentQuality()).isEqualTo(2)
+        val backstageQuality = app.items[0].currentQuality()
+        val noQuality = 0
+        assertThat(backstageQuality).isEqualTo(noQuality)
     }
 
-    @Test
-    fun `increase quality of Backstage passes by 2 when the item is still on the number of days to be sold and the number of days to be sold is between 10 and 6`() {
-        val goods = listOf(BackstagePass("Backstage passes to a TAFKAL80ETC concert", 10, 1))
-        val app = GildedRose(goods)
-
-        app.updateQuality()
-
-        assertThat(app.items[0].currentQuality()).isEqualTo(3)
+    private fun createGildedRoseApp(items: List<Item>): GildedRose {
+        return GildedRose(items)
     }
-
-    @Test
-    fun `increase quality of Backstage passes by 3 when the item is still on the number of days to be sold and the number of days to be sold is between 5 and 1`() {
-        val goods = listOf(BackstagePass("Backstage passes to a TAFKAL80ETC concert", 5, 1))
-        val app = GildedRose(goods)
-
-        app.updateQuality()
-
-        assertThat(app.items[0].currentQuality()).isEqualTo(4)
-    }
-
-    @Test
-    fun `set quality of Backstage passes to 0 when the item is still on the number of days to be sold and the number of days to be sold is 0`() {
-        val goods = listOf(BackstagePass("Backstage passes to a TAFKAL80ETC concert", 0, 1))
-        val app = GildedRose(goods)
-
-        app.updateQuality()
-
-        assertThat(app.items[0].currentQuality()).isEqualTo(0)
-    }
-
 
 }
