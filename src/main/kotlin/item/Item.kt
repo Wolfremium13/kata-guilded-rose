@@ -1,4 +1,4 @@
-package dev.wolfremium.www.items
+package dev.wolfremium.www.item
 
 abstract class Item(protected val name: String, protected var daysLeft: Int, protected var quality: Int) {
     protected val minQuality = 0

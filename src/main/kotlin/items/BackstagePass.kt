@@ -1,5 +1,7 @@
 package dev.wolfremium.www.items
 
+import dev.wolfremium.www.item.Item
+
 class BackstagePass(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, quality) {
     override fun updateQuality() {
         when {
