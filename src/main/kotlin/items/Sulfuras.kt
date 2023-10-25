@@ -1,8 +1,17 @@
 package dev.wolfremium.www.items
 
+import dev.wolfremium.www.item.DaysLeft
 import dev.wolfremium.www.item.Item
+import dev.wolfremium.www.item.ItemName
+import dev.wolfremium.www.item.ItemQuality
 
-class Sulfuras(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, quality) {
+class Sulfuras(
+    name: ItemName,
+    daysLeft: DaysLeft,
+    quality: ItemQuality
+) : Item(
+    name, daysLeft, quality
+) {
     override fun updateQuality() {
         // Nothing to do
     }
@@ -12,6 +21,6 @@ class Sulfuras(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, qua
     }
 
     override fun currentQuality(): Int {
-        return quality
+        return quality.value()
     }
 }

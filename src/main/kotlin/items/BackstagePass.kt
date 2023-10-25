@@ -1,37 +1,38 @@
 package dev.wolfremium.www.items
 
+import dev.wolfremium.www.item.DaysLeft
 import dev.wolfremium.www.item.Item
+import dev.wolfremium.www.item.ItemName
+import dev.wolfremium.www.item.ItemQuality
 
-class BackstagePass(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, quality) {
+class BackstagePass(
+    name: ItemName,
+    daysLeft: DaysLeft,
+    quality: ItemQuality
+) : Item(
+    name, daysLeft, quality
+) {
     override fun updateQuality() {
         when {
-            isOnMaximumQuality() -> quality = maxQuality
-            thereAreALotOfTimeLeft() -> increaseQuality()
-            isNearToTheLastWeek() -> increaseQuality(2)
-            isOnLastDays() -> increaseQuality(3)
-            else -> quality = minQuality
+            quality.isMaximum() -> quality = ItemQuality.create(quality.maximum())
+            thereAreALotOfTimeLeft() -> quality.increase()
+            isNearToTheLastWeek() -> quality.increase(2)
+            isOnLastDays() -> quality.increase(3)
+            else -> quality = ItemQuality.create(quality.minimum())
         }
     }
 
-    private fun isOnMaximumQuality(): Boolean {
-        return quality == maxQuality
-    }
-
     override fun decreaseDaysLeft() {
-        daysLeft -= dayDecrease
+        daysLeft.decrease()
     }
 
     override fun currentQuality(): Int {
-        return quality
+        return quality.value()
     }
 
-    private fun thereAreALotOfTimeLeft() = daysLeft > 10 && quality < maxQuality
+    private fun thereAreALotOfTimeLeft() = daysLeft.value() > 10 && quality.value() < quality.maximum()
 
-    private fun isNearToTheLastWeek() = daysLeft in 6..10 && quality <= maxQuality - 2
+    private fun isNearToTheLastWeek() = daysLeft.value() in 6..10 && quality.value() <= quality.maximum() - 2
 
-    private fun isOnLastDays() = daysLeft in 1..5 && quality <= maxQuality - 3
-
-    private fun increaseQuality(times: Int = 1) {
-        quality += qualityIncrease * times
-    }
+    private fun isOnLastDays() = daysLeft.value() in 1..5 && quality.value() <= quality.maximum() - 3
 }

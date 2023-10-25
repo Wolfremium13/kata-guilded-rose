@@ -1,33 +1,29 @@
 package dev.wolfremium.www.items
 
+import dev.wolfremium.www.item.DaysLeft
 import dev.wolfremium.www.item.Item
+import dev.wolfremium.www.item.ItemName
+import dev.wolfremium.www.item.ItemQuality
 
-class DefaultItem(name: String, sellIn: Int, quality: Int) : Item(name, sellIn, quality) {
+class DefaultItem(
+    name: ItemName,
+    daysLeft: DaysLeft,
+    quality: ItemQuality
+) : Item(
+    name, daysLeft, quality
+) {
     override fun updateQuality() {
-        if (hadQuality()) {
-            decreaseQuality()
-        }
-        if (isExpired() && hadQuality()) {
-            decreaseQuality()
+        quality.decrease()
+        if (daysLeft.areOver()) {
+            quality.decrease()
         }
     }
+
     override fun decreaseDaysLeft() {
-        daysLeft -= dayDecrease
+        daysLeft.decrease()
     }
 
     override fun currentQuality(): Int {
-        return quality
-    }
-
-    private fun isExpired(): Boolean {
-        return daysLeft <= 0
-    }
-
-    private fun hadQuality(): Boolean {
-        return quality > minQuality
-    }
-
-    private fun decreaseQuality() {
-        quality -= this.qualityDecrease
+        return quality.value()
     }
 }

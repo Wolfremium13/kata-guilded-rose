@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource
 const val agedBrieItemName = "Aged Brie"
 const val backstagePassItemName = "Backstage passes to a TAFKAL80ETC concert"
 const val sulfurasItemName = "Sulfuras, Hand of Ragnaros"
-const val defaultItemName = "defauult item"
+const val defaultItemName = "default item"
 
 class GildedRoseShould {
     private val qualityDecrease = 1
