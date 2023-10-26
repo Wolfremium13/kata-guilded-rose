@@ -30,9 +30,9 @@ class BackstagePass(
         return quality.value()
     }
 
-    private fun thereAreALotOfTimeLeft() = daysLeft.value() > 10 && quality.value() < quality.maximum()
+    private fun thereAreALotOfTimeLeft() = daysLeft.value() > 10
 
-    private fun isNearToTheLastWeek() = daysLeft.value() in 6..10 && quality.value() <= quality.maximum() - 2
+    private fun isNearToTheLastWeek() = daysLeft.value() in 6..10
 
-    private fun isOnLastDays() = daysLeft.value() in 1..5 && quality.value() <= quality.maximum() - 3
+    private fun isOnLastDays() = daysLeft.value() in 1..5
 }
