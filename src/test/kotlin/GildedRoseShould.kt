@@ -44,7 +44,6 @@ class GildedRoseShould {
     @ValueSource(
         strings = [
             backstagePassItemName,
-            sulfurasItemName,
             defaultItemName
         ]
     )
@@ -113,18 +112,18 @@ class GildedRoseShould {
     }
 
     @Test
-    fun `never change quality of Sulfuras`() {
-        val initialQuality = 10
+    fun `never change the legendary quality of sulfuras`() {
+        val legendaryQuality = 80
         val app = this.createGildedRoseApp(
             listOf(
-                ItemBuilder().withName(sulfurasItemName).withQuality(initialQuality).build()
+                ItemBuilder().withName(sulfurasItemName).build()
             )
         )
 
         app.updateQuality()
 
         val sulfurasQuality = app.items[0].currentQuality()
-        assertThat(sulfurasQuality).isEqualTo(initialQuality)
+        assertThat(sulfurasQuality).isEqualTo(legendaryQuality)
     }
 
     @Test

@@ -21,6 +21,7 @@ class Sulfuras(
     }
 
     override fun currentQuality(): Int {
-        return quality.value()
+        val legendaryQuality = 80
+        return legendaryQuality
     }
 }
