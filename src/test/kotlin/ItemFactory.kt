@@ -2,10 +2,7 @@ import dev.wolfremium.www.item.DaysLeft
 import dev.wolfremium.www.item.Item
 import dev.wolfremium.www.item.ItemName
 import dev.wolfremium.www.item.ItemQuality
-import dev.wolfremium.www.items.AgedBrie
-import dev.wolfremium.www.items.BackstagePass
-import dev.wolfremium.www.items.DefaultItem
-import dev.wolfremium.www.items.Sulfuras
+import dev.wolfremium.www.items.*
 
 class ItemFactory {
     companion object {
@@ -14,6 +11,7 @@ class ItemFactory {
                 "Aged Brie" -> AgedBrie(itemName, daysLeft, quality)
                 "Backstage passes to a TAFKAL80ETC concert" -> BackstagePass(itemName, daysLeft, quality)
                 "Sulfuras, Hand of Ragnaros" -> Sulfuras(itemName, daysLeft, quality)
+                "Conjured" -> Conjured(itemName, daysLeft, quality)
                 else -> DefaultItem(itemName, daysLeft, quality)
             }
         }

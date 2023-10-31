@@ -186,6 +186,39 @@ class GildedRoseShould {
         assertThat(backstageQuality).isEqualTo(noQuality)
     }
 
+    @Test
+    fun `conjured items decreases the value twice fast than default ones`() {
+        val initialQuality = 10
+        val conjuredItemName = "Conjured"
+        val app = this.createGildedRoseApp(
+            listOf(
+                ItemBuilder().withName(conjuredItemName).withQuality(initialQuality).build()
+            )
+        )
+
+        app.updateQuality()
+
+        val conjuredQuality = app.items[0].currentQuality()
+        assertThat(conjuredQuality).isEqualTo(initialQuality - (qualityDecrease * 2))
+    }
+
+    @Test
+    fun `conjured items decreases the value twice fast than default ones when expired`() {
+        val initialQuality = 10
+        val conjuredItemName = "Conjured"
+        val noDaysLeft = 0
+        val app = this.createGildedRoseApp(
+            listOf(
+                ItemBuilder().withName(conjuredItemName).withDaysLeft(noDaysLeft).withQuality(initialQuality).build()
+            )
+        )
+
+        app.updateQuality()
+
+        val conjuredQuality = app.items[0].currentQuality()
+        assertThat(conjuredQuality).isEqualTo(initialQuality - (qualityDecrease * 4))
+    }
+
     private fun createGildedRoseApp(items: List<Item>): GildedRose {
         return GildedRose(items)
     }
