@@ -35,11 +35,11 @@ class GildedRoseShould {
 
     @Test
     fun `increase the quality of Aged Brie`() {
-        val item = Item(name = "Aged Brie", sellIn = -1, quality = 3)
+        val item = Item(name = "Aged Brie", sellIn = 4, quality = 3)
 
         GildedRose(listOf(item)).updateQuality()
 
-        assertThat(item.quality).isEqualTo(5)
+        assertThat(item.quality).isEqualTo(4)
     }
 
     @Test
