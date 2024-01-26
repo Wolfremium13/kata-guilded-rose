@@ -44,4 +44,14 @@ class GildedRoseShould {
 
         assertThat(shop.items[0].quality).isEqualTo(50)
     }
+
+    @Test
+    fun `quality is always 80 for Sulfuras`() {
+        val item = Item(name = "Sulfuras", sellIn = 1, quality = 80)
+        val shop = GildedRose(listOf(item))
+
+        shop.updateQuality()
+
+        assertThat(shop.items[0].quality).isEqualTo(80)
+    }
 }
