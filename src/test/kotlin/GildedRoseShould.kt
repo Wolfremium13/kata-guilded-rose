@@ -11,12 +11,12 @@ class GildedRoseShould {
     @ParameterizedTest(name = "quality of {0} cannot be negative")
     @ValueSource(
         strings = [
-            "Backstage passes",
+            "Backstage passes to a TAFKAL80ETC concert",
             "DefaultItem"
         ]
     )
     fun `quality cannot be negative`(itemName: String) {
-        val item = Item(name = itemName, sellIn = 1, quality = 0)
+        val item = Item(name = itemName, sellIn = 0, quality = 0)
         val shop = GildedRose(listOf(item))
 
         shop.updateQuality()
@@ -36,8 +36,8 @@ class GildedRoseShould {
     }
 
     @Test
-    fun `quality cannot be higher than 50 for Backstage passes`() {
-        val item = Item(name = "Backstage passes", sellIn = 1, quality = 50)
+    fun `not allow higher than the maximum quality for Backstage passes`() {
+        val item = Item(name = "Backstage passes to a TAFKAL80ETC concert", sellIn = 2, quality = 50)
         val shop = GildedRose(listOf(item))
 
         shop.updateQuality()
@@ -46,12 +46,24 @@ class GildedRoseShould {
     }
 
     @Test
-    fun `quality is always 80 for Sulfuras`() {
-        val item = Item(name = "Sulfuras", sellIn = 1, quality = 80)
+    fun `not allow change the quality of Sulfuras`() {
+        val item = Item(name = "Sulfuras, Hand of Ragnaros", sellIn = 1, quality = 80)
         val shop = GildedRose(listOf(item))
 
         shop.updateQuality()
 
         assertThat(shop.items[0].quality).isEqualTo(80)
     }
+
+    @Test
+    fun `allow to change the quality of Backstage passes`(){
+        val item = Item(name = "Backstage passes to a TAFKAL80ETC concert", sellIn = 0, quality = 50)
+        val shop = GildedRose(listOf(item))
+
+        shop.updateQuality()
+
+        assertThat(shop.items[0].quality).isEqualTo(0)
+        assertThat(shop.items[0].sellIn).isEqualTo(-1)
+    }
+
 }
