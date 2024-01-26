@@ -34,6 +34,15 @@ class GildedRoseShould {
     }
 
     @Test
+    fun `increase the quality of Aged Brie`() {
+        val item = Item(name = "Aged Brie", sellIn = -1, quality = 3)
+
+        GildedRose(listOf(item)).updateQuality()
+
+        assertThat(item.quality).isEqualTo(5)
+    }
+
+    @Test
     fun `not allow higher than the maximum quality for Backstage passes`() {
         val item = Item(name = "Backstage passes to a TAFKAL80ETC concert", sellIn = 2, quality = 50)
 
