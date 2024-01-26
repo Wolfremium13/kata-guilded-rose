@@ -9,12 +9,7 @@ class GildedRoseShould {
     // The system cannot support out of edge inputs
 
     @ParameterizedTest(name = "quality of {0} cannot be negative")
-    @ValueSource(
-        strings = [
-            "Backstage passes to a TAFKAL80ETC concert",
-            "DefaultItem"
-        ]
-    )
+    @ValueSource(strings=["Backstage passes to a TAFKAL80ETC concert", "DefaultItem"])
     fun `quality cannot be negative`(itemName: String) {
         val item = Item(name = itemName, sellIn = 0, quality = 0)
 
