@@ -66,4 +66,15 @@ class GildedRoseShould {
         assertThat(shop.items[0].sellIn).isEqualTo(-1)
     }
 
+    @Test
+    fun `decrease twice time faster the expired items` (){
+        val item = Item(name = "DefaultIteam", sellIn = 0, quality = 50)
+        val shop = GildedRose(listOf(item))
+
+        shop.updateQuality()
+
+        assertThat(shop.items[0].quality).isEqualTo(48)
+        assertThat(shop.items[0].sellIn).isEqualTo(-1)
+    }
+
 }
