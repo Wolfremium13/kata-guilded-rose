@@ -6,8 +6,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class GildedRoseShould {
-    // The system cannot support out of edge inputs
-
     @ParameterizedTest(name = "quality of {0} cannot be negative")
     @ValueSource(strings=["Backstage passes to a TAFKAL80ETC concert", "DefaultItem"])
     fun `quality cannot be negative`(itemName: String) {
@@ -47,12 +45,43 @@ class GildedRoseShould {
     }
 
     @Test
-    fun `not allow higher than the maximum quality for Backstage passes`() {
+    fun `not allow higher than the maximum quality for Backstage`() {
         val item = Item(name = "Backstage passes to a TAFKAL80ETC concert", sellIn = 2, quality = 50)
 
         GildedRose(listOf(item)).updateQuality()
 
         assertThat(item.quality).isEqualTo(50)
+        assertThat(item.sellIn).isEqualTo(1)
+    }
+
+    @Test
+    fun `increase twice the value of backstage if there are 10 days before out date`() {
+        val item = Item(name = "Backstage passes to a TAFKAL80ETC concert", sellIn = 10, quality = 40)
+
+        GildedRose(listOf(item)).updateQuality()
+
+        assertThat(item.quality).isEqualTo(42)
+        assertThat(item.sellIn).isEqualTo(9)
+    }
+
+    @Test
+    fun `increase twice the value of backstage if there are more than 10 days before out date`() {
+        val item = Item(name = "Backstage passes to a TAFKAL80ETC concert", sellIn = 11, quality = 40)
+
+        GildedRose(listOf(item)).updateQuality()
+
+        assertThat(item.quality).isEqualTo(41)
+        assertThat(item.sellIn).isEqualTo(10)
+    }
+
+    @Test
+    fun `not allow higher than the maximum quality for out dated Backstage`() {
+        val item = Item(name = "Backstage passes to a TAFKAL80ETC concert", sellIn = 0, quality = 50)
+
+        GildedRose(listOf(item)).updateQuality()
+
+        assertThat(item.quality).isEqualTo(0)
+        assertThat(item.sellIn).isEqualTo(-1)
     }
 
     @Test
@@ -62,16 +91,7 @@ class GildedRoseShould {
         GildedRose(listOf(item)).updateQuality()
 
         assertThat(item.quality).isEqualTo(20)
-    }
-
-    @Test
-    fun `allow to change the quality of Backstage passes`(){
-        val item = Item(name = "Backstage passes to a TAFKAL80ETC concert", sellIn = 0, quality = 50)
-
-        GildedRose(listOf(item)).updateQuality()
-
-        assertThat(item.quality).isEqualTo(0)
-        assertThat(item.sellIn).isEqualTo(-1)
+        assertThat(item.sellIn).isEqualTo(1)
     }
 
     @Test
