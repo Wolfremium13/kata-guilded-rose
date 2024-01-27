@@ -44,17 +44,18 @@ class GildedRose(var items: List<Item>) {
                 return
             }
 
-            if (item.name != "Aged Brie") {
-                if (item.quality > 0) {
-                    if (item.name == "Sulfuras, Hand of Ragnaros") {
-                        return
-                    }
-                    item.quality = item.quality - 1
-                }
-            } else {
+            if (item.name == "Aged Brie") {
                 if (item.quality < 50) {
                     item.quality = item.quality + 1
                 }
+                return
+            }
+
+            if (item.quality > 0) {
+                if (item.name == "Sulfuras, Hand of Ragnaros") {
+                    return
+                }
+                item.quality = item.quality - 1
             }
         }
     }
