@@ -8,30 +8,20 @@ class GildedRose(var items: List<Item>) {
     }
 
     private fun updateQuality(item: Item) {
-        if (item.name == "Sulfuras, Hand of Ragnaros") {
-            return
-        }
-
-        if (item.name == "Backstage passes to a TAFKAL80ETC concert") {
-            updateBackstage(item)
-
-            return
-        }
-
-        if (item.name == "Aged Brie") {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1
+        when (item.name) {
+            "Sulfuras, Hand of Ragnaros" -> {
             }
-            item.sellIn = item.sellIn - 1
-
-            if (item.sellIn < 0) {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1
-                }
+            "Backstage passes to a TAFKAL80ETC concert" -> {
+                updateBackstage(item)
             }
-            return
+            "Aged Brie" -> {
+                updateAgedBrie(item)
+            }
+            else -> updateNormal(item)
         }
+    }
 
+    private fun updateNormal(item: Item) {
         if (item.quality > 0) {
             item.quality = item.quality - 1
         }
@@ -42,6 +32,19 @@ class GildedRose(var items: List<Item>) {
 
             if (item.quality > 0) {
                 item.quality = item.quality - 1
+            }
+        }
+    }
+
+    private fun updateAgedBrie(item: Item) {
+        if (item.quality < 50) {
+            item.quality = item.quality + 1
+        }
+        item.sellIn = item.sellIn - 1
+
+        if (item.sellIn < 0) {
+            if (item.quality < 50) {
+                item.quality = item.quality + 1
             }
         }
     }
